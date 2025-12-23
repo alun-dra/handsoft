@@ -1,0 +1,1605 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 15.13
+-- Dumped by pg_dump version 15.13
+
+-- Started on 2025-12-23 19:27:37
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 237 (class 1259 OID 61542)
+-- Name: addresses; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.addresses (
+    id bigint NOT NULL,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone,
+    commune_id bigint NOT NULL,
+    street text NOT NULL,
+    street_number text NOT NULL,
+    is_condominium boolean,
+    condominium_house_number text,
+    building_number text,
+    apartment_number text,
+    extra text
+);
+
+
+ALTER TABLE public.addresses OWNER TO postgres;
+
+--
+-- TOC entry 236 (class 1259 OID 61541)
+-- Name: addresses_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.addresses_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.addresses_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3473 (class 0 OID 0)
+-- Dependencies: 236
+-- Name: addresses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.addresses_id_seq OWNED BY public.addresses.id;
+
+
+--
+-- TOC entry 229 (class 1259 OID 61474)
+-- Name: cities; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.cities (
+    id bigint NOT NULL,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone,
+    region_id bigint NOT NULL,
+    name text NOT NULL
+);
+
+
+ALTER TABLE public.cities OWNER TO postgres;
+
+--
+-- TOC entry 228 (class 1259 OID 61473)
+-- Name: cities_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.cities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.cities_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3474 (class 0 OID 0)
+-- Dependencies: 228
+-- Name: cities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.cities_id_seq OWNED BY public.cities.id;
+
+
+--
+-- TOC entry 231 (class 1259 OID 61489)
+-- Name: communes; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.communes (
+    id bigint NOT NULL,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone,
+    city_id bigint NOT NULL,
+    name text NOT NULL
+);
+
+
+ALTER TABLE public.communes OWNER TO postgres;
+
+--
+-- TOC entry 230 (class 1259 OID 61488)
+-- Name: communes_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.communes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.communes_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3475 (class 0 OID 0)
+-- Dependencies: 230
+-- Name: communes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.communes_id_seq OWNED BY public.communes.id;
+
+
+--
+-- TOC entry 233 (class 1259 OID 61510)
+-- Name: contacts; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.contacts (
+    id bigint NOT NULL,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone,
+    user_id bigint NOT NULL,
+    full_name text
+);
+
+
+ALTER TABLE public.contacts OWNER TO postgres;
+
+--
+-- TOC entry 232 (class 1259 OID 61509)
+-- Name: contacts_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.contacts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.contacts_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3476 (class 0 OID 0)
+-- Dependencies: 232
+-- Name: contacts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.contacts_id_seq OWNED BY public.contacts.id;
+
+
+--
+-- TOC entry 225 (class 1259 OID 61447)
+-- Name: countries; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.countries (
+    id bigint NOT NULL,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone,
+    name text NOT NULL,
+    code text NOT NULL
+);
+
+
+ALTER TABLE public.countries OWNER TO postgres;
+
+--
+-- TOC entry 224 (class 1259 OID 61446)
+-- Name: countries_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.countries_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3477 (class 0 OID 0)
+-- Dependencies: 224
+-- Name: countries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.countries_id_seq OWNED BY public.countries.id;
+
+
+--
+-- TOC entry 222 (class 1259 OID 61422)
+-- Name: permissions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.permissions (
+    id bigint NOT NULL,
+    code text NOT NULL,
+    description text,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone
+);
+
+
+ALTER TABLE public.permissions OWNER TO postgres;
+
+--
+-- TOC entry 221 (class 1259 OID 61421)
+-- Name: permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.permissions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.permissions_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3478 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.permissions_id_seq OWNED BY public.permissions.id;
+
+
+--
+-- TOC entry 220 (class 1259 OID 61407)
+-- Name: profiles; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.profiles (
+    id bigint NOT NULL,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone,
+    user_id bigint NOT NULL,
+    full_name text,
+    phone text
+);
+
+
+ALTER TABLE public.profiles OWNER TO postgres;
+
+--
+-- TOC entry 219 (class 1259 OID 61406)
+-- Name: profiles_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.profiles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.profiles_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3479 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: profiles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.profiles_id_seq OWNED BY public.profiles.id;
+
+
+--
+-- TOC entry 227 (class 1259 OID 61458)
+-- Name: regions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.regions (
+    id bigint NOT NULL,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone,
+    country_id bigint NOT NULL,
+    name text NOT NULL,
+    code text
+);
+
+
+ALTER TABLE public.regions OWNER TO postgres;
+
+--
+-- TOC entry 226 (class 1259 OID 61457)
+-- Name: regions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.regions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.regions_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3480 (class 0 OID 0)
+-- Dependencies: 226
+-- Name: regions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.regions_id_seq OWNED BY public.regions.id;
+
+
+--
+-- TOC entry 223 (class 1259 OID 61431)
+-- Name: role_permissions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.role_permissions (
+    role_id bigint NOT NULL,
+    permission_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.role_permissions OWNER TO postgres;
+
+--
+-- TOC entry 217 (class 1259 OID 61382)
+-- Name: roles; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.roles (
+    id bigint NOT NULL,
+    name text NOT NULL,
+    description text,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone,
+    is_super_admin boolean DEFAULT false
+);
+
+
+ALTER TABLE public.roles OWNER TO postgres;
+
+--
+-- TOC entry 216 (class 1259 OID 61381)
+-- Name: roles_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.roles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.roles_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3481 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.roles_id_seq OWNED BY public.roles.id;
+
+
+--
+-- TOC entry 235 (class 1259 OID 61525)
+-- Name: user_phones; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.user_phones (
+    id bigint NOT NULL,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone,
+    user_id bigint NOT NULL,
+    label text NOT NULL,
+    number text NOT NULL,
+    is_main boolean DEFAULT false
+);
+
+
+ALTER TABLE public.user_phones OWNER TO postgres;
+
+--
+-- TOC entry 234 (class 1259 OID 61524)
+-- Name: user_phones_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.user_phones_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.user_phones_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3482 (class 0 OID 0)
+-- Dependencies: 234
+-- Name: user_phones_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.user_phones_id_seq OWNED BY public.user_phones.id;
+
+
+--
+-- TOC entry 218 (class 1259 OID 61391)
+-- Name: user_roles; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.user_roles (
+    user_id bigint NOT NULL,
+    role_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.user_roles OWNER TO postgres;
+
+--
+-- TOC entry 215 (class 1259 OID 61370)
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users (
+    id bigint NOT NULL,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone,
+    email text NOT NULL,
+    username text NOT NULL,
+    password_hash text NOT NULL,
+    is_active boolean DEFAULT true,
+    commune_id bigint,
+    address_id bigint
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- TOC entry 214 (class 1259 OID 61369)
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3483 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- TOC entry 3244 (class 2604 OID 61545)
+-- Name: addresses id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.addresses ALTER COLUMN id SET DEFAULT nextval('public.addresses_id_seq'::regclass);
+
+
+--
+-- TOC entry 3239 (class 2604 OID 61477)
+-- Name: cities id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.cities ALTER COLUMN id SET DEFAULT nextval('public.cities_id_seq'::regclass);
+
+
+--
+-- TOC entry 3240 (class 2604 OID 61492)
+-- Name: communes id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.communes ALTER COLUMN id SET DEFAULT nextval('public.communes_id_seq'::regclass);
+
+
+--
+-- TOC entry 3241 (class 2604 OID 61513)
+-- Name: contacts id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.contacts ALTER COLUMN id SET DEFAULT nextval('public.contacts_id_seq'::regclass);
+
+
+--
+-- TOC entry 3237 (class 2604 OID 61450)
+-- Name: countries id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.countries ALTER COLUMN id SET DEFAULT nextval('public.countries_id_seq'::regclass);
+
+
+--
+-- TOC entry 3236 (class 2604 OID 61425)
+-- Name: permissions id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.permissions ALTER COLUMN id SET DEFAULT nextval('public.permissions_id_seq'::regclass);
+
+
+--
+-- TOC entry 3235 (class 2604 OID 61410)
+-- Name: profiles id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.profiles ALTER COLUMN id SET DEFAULT nextval('public.profiles_id_seq'::regclass);
+
+
+--
+-- TOC entry 3238 (class 2604 OID 61461)
+-- Name: regions id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.regions ALTER COLUMN id SET DEFAULT nextval('public.regions_id_seq'::regclass);
+
+
+--
+-- TOC entry 3233 (class 2604 OID 61385)
+-- Name: roles id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.roles ALTER COLUMN id SET DEFAULT nextval('public.roles_id_seq'::regclass);
+
+
+--
+-- TOC entry 3242 (class 2604 OID 61528)
+-- Name: user_phones id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_phones ALTER COLUMN id SET DEFAULT nextval('public.user_phones_id_seq'::regclass);
+
+
+--
+-- TOC entry 3231 (class 2604 OID 61373)
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- TOC entry 3467 (class 0 OID 61542)
+-- Dependencies: 237
+-- Data for Name: addresses; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.addresses (id, created_at, updated_at, commune_id, street, street_number, is_condominium, condominium_house_number, building_number, apartment_number, extra) FROM stdin;
+1	2025-12-22 15:52:28.184862-03	2025-12-22 15:52:28.184862-03	83	Av. La Dehesa	1234	t	12			Casa esquina
+\.
+
+
+--
+-- TOC entry 3459 (class 0 OID 61474)
+-- Dependencies: 229
+-- Data for Name: cities; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.cities (id, created_at, updated_at, region_id, name) FROM stdin;
+1	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	1	Parinacota
+2	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	1	Arica
+3	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	2	Tamarugal
+4	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	2	Iquique
+5	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	3	Tocopilla
+6	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	3	El Loa
+7	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	3	Antofagasta
+8	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	4	Huasco
+9	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	4	Copiapó
+10	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	4	Chañaral
+11	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	5	Limarí
+12	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	5	Elqui
+13	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	5	Choapa
+14	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	6	Valparaíso
+15	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	6	San Felipe de Aconcagua
+16	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	6	San Antonio
+17	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	6	Quillota
+18	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	6	Petorca
+19	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	6	Marga Marga
+20	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	6	Los Andes
+21	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	6	Isla de Pascua
+22	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	7	Talagante
+23	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	7	Santiago
+24	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	7	Melipilla
+25	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	7	Maipo
+26	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	7	Cordillera
+27	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	7	Chacabuco
+28	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	8	Colchagua
+29	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	8	Cardenal Caro
+30	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	8	Cachapoal
+31	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	9	Talca
+32	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	9	Linares
+33	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	9	Curicó
+34	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	9	Cauquenes
+35	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	10	Punilla
+36	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	10	Itata
+37	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	10	Diguillín
+38	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	11	Concepción
+39	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	11	Biobío
+40	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	11	Arauco
+41	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	12	Malleco
+42	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	12	Cautín
+43	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	13	Ranco
+44	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	13	Valdivia
+45	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	14	Palena
+46	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	14	Osorno
+47	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	14	Llanquihue
+48	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	14	Chiloé
+49	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	15	General Carrera
+50	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	15	Coyhaique
+51	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	15	Capitán Prat
+52	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	15	Aysén
+53	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	16	Última Esperanza
+54	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	16	Tierra del Fuego
+55	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	16	Magallanes
+56	2025-12-22 12:42:58.256154-03	2025-12-22 12:42:58.256154-03	16	Antártica Chilena
+\.
+
+
+--
+-- TOC entry 3461 (class 0 OID 61489)
+-- Dependencies: 231
+-- Data for Name: communes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.communes (id, created_at, updated_at, city_id, name) FROM stdin;
+1	2025-12-22 14:28:13.431149-03	2025-12-22 14:28:13.431149-03	1	General Lagos
+2	2025-12-22 14:28:13.431149-03	2025-12-22 14:28:13.431149-03	1	Putre
+3	2025-12-22 14:28:13.431149-03	2025-12-22 14:28:13.431149-03	2	Camarones
+4	2025-12-22 14:28:13.431149-03	2025-12-22 14:28:13.431149-03	2	Arica
+5	2025-12-22 14:30:42.533134-03	2025-12-22 14:30:42.533134-03	3	Pozo Almonte
+6	2025-12-22 14:30:42.533134-03	2025-12-22 14:30:42.533134-03	3	Pica
+7	2025-12-22 14:30:42.533134-03	2025-12-22 14:30:42.533134-03	3	Huara
+8	2025-12-22 14:30:42.533134-03	2025-12-22 14:30:42.533134-03	3	Colchane
+9	2025-12-22 14:30:42.533134-03	2025-12-22 14:30:42.533134-03	3	Camiña
+10	2025-12-22 14:30:42.533134-03	2025-12-22 14:30:42.533134-03	4	Iquique
+11	2025-12-22 14:30:42.533134-03	2025-12-22 14:30:42.533134-03	4	Alto Hospicio
+12	2025-12-22 14:32:28.70492-03	2025-12-22 14:32:28.70492-03	5	María Elena
+13	2025-12-22 14:32:28.70492-03	2025-12-22 14:32:28.70492-03	5	Tocopilla
+14	2025-12-22 14:32:28.70492-03	2025-12-22 14:32:28.70492-03	6	San Pedro de Atacama
+15	2025-12-22 14:32:28.70492-03	2025-12-22 14:32:28.70492-03	6	Ollagüe
+16	2025-12-22 14:32:28.70492-03	2025-12-22 14:32:28.70492-03	6	Calama
+17	2025-12-22 14:32:28.70492-03	2025-12-22 14:32:28.70492-03	7	Taltal
+18	2025-12-22 14:32:28.70492-03	2025-12-22 14:32:28.70492-03	7	Sierra Gorda
+19	2025-12-22 14:32:28.70492-03	2025-12-22 14:32:28.70492-03	7	Mejillones
+20	2025-12-22 14:32:28.70492-03	2025-12-22 14:32:28.70492-03	7	Antofagasta
+21	2025-12-22 14:35:21.902113-03	2025-12-22 14:35:21.902113-03	8	Huasco
+22	2025-12-22 14:35:21.902113-03	2025-12-22 14:35:21.902113-03	8	Freirina
+23	2025-12-22 14:35:21.902113-03	2025-12-22 14:35:21.902113-03	8	Alto del Carmen
+24	2025-12-22 14:35:21.902113-03	2025-12-22 14:35:21.902113-03	8	Vallenar
+25	2025-12-22 14:35:21.902113-03	2025-12-22 14:35:21.902113-03	9	Tierra Amarilla
+26	2025-12-22 14:35:21.902113-03	2025-12-22 14:35:21.902113-03	9	Caldera
+27	2025-12-22 14:35:21.902113-03	2025-12-22 14:35:21.902113-03	9	Copiapó
+28	2025-12-22 14:35:21.902113-03	2025-12-22 14:35:21.902113-03	10	Diego de Almagro
+29	2025-12-22 14:35:21.902113-03	2025-12-22 14:35:21.902113-03	10	Chañaral
+30	2025-12-22 14:37:53.663893-03	2025-12-22 14:37:53.663893-03	11	Río Hurtado
+31	2025-12-22 14:37:53.663893-03	2025-12-22 14:37:53.663893-03	11	Punitaqui
+32	2025-12-22 14:37:53.663893-03	2025-12-22 14:37:53.663893-03	11	Monte Patria
+33	2025-12-22 14:37:53.663893-03	2025-12-22 14:37:53.663893-03	11	Combarbalá
+34	2025-12-22 14:37:53.663893-03	2025-12-22 14:37:53.663893-03	11	Ovalle
+35	2025-12-22 14:37:53.663893-03	2025-12-22 14:37:53.663893-03	12	Vicuña
+36	2025-12-22 14:37:53.663893-03	2025-12-22 14:37:53.663893-03	12	Paihuano
+37	2025-12-22 14:37:53.663893-03	2025-12-22 14:37:53.663893-03	12	La Higuera
+38	2025-12-22 14:37:53.663893-03	2025-12-22 14:37:53.663893-03	12	Andacollo
+39	2025-12-22 14:37:53.663893-03	2025-12-22 14:37:53.663893-03	12	Coquimbo
+40	2025-12-22 14:37:53.663893-03	2025-12-22 14:37:53.663893-03	12	La Serena
+41	2025-12-22 14:37:53.663893-03	2025-12-22 14:37:53.663893-03	13	Salamanca
+42	2025-12-22 14:37:53.663893-03	2025-12-22 14:37:53.663893-03	13	Los Vilos
+43	2025-12-22 14:37:53.663893-03	2025-12-22 14:37:53.663893-03	13	Canela
+44	2025-12-22 14:37:53.663893-03	2025-12-22 14:37:53.663893-03	13	Illapel
+45	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	14	Viña del Mar
+46	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	14	Quintero
+47	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	14	Puchuncaví
+48	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	14	Juan Fernández
+49	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	14	Concón
+50	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	14	Casablanca
+51	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	14	Valparaíso
+52	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	15	Santa María
+53	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	15	Putaendo
+54	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	15	Panquehue
+55	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	15	Llaillay
+56	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	15	Catemu
+57	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	15	San Felipe
+58	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	16	Santo Domingo
+59	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	16	El Tabo
+60	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	16	El Quisco
+61	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	16	Cartagena
+62	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	16	Algarrobo
+63	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	16	San Antonio
+64	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	17	Nogales
+65	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	17	La Cruz
+66	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	17	Hijuelas
+67	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	17	Calera
+68	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	17	Quillota
+69	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	18	Zapallar
+70	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	18	Petorca
+71	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	18	Papudo
+72	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	18	Cabildo
+73	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	18	La Ligua
+74	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	19	Olmué
+75	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	19	Limache
+76	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	19	Villa Alemana
+77	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	19	Quilpué
+78	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	20	San Esteban
+79	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	20	Rinconada
+80	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	20	Calle Larga
+81	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	20	Los Andes
+82	2025-12-22 14:44:07.433568-03	2025-12-22 14:44:07.433568-03	21	Isla de Pascua
+83	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	23	Lo Barnechea
+84	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	23	San Miguel
+85	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	23	Ñuñoa
+86	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	23	San Joaquín
+87	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	23	Independencia
+88	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	23	Lo Prado
+89	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	23	Lo Espejo
+90	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	23	San Ramón
+91	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	23	Maipú
+92	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	23	Santiago
+93	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	23	La Florida
+94	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	24	Melipilla
+95	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	24	María Pinto
+96	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	24	San Pedro
+97	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	24	Alhué
+98	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	25	San Bernardo
+99	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	26	Puente Alto
+100	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	26	San José de Maipo
+101	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	27	Colina
+102	2025-12-22 14:50:48.880842-03	2025-12-22 14:50:48.880842-03	27	Tiltil
+103	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	28	Santa Cruz
+104	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	28	Pumanque
+105	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	28	Placilla
+106	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	28	Peralillo
+107	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	28	Palmilla
+108	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	28	Nancagua
+109	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	28	Lolol
+110	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	28	Chimbarongo
+111	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	28	Chépica
+112	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	28	San Fernando
+113	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	29	Paredones
+114	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	29	Navidad
+115	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	29	Marchihue
+116	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	29	Litueche
+117	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	29	La Estrella
+118	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	29	Pichilemu
+119	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	30	San Vicente
+120	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	30	Requínoa
+121	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	30	Rengo
+122	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	30	Quinta de Tilcoco
+123	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	30	Pichidegua
+124	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	30	Peumo
+125	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	30	Olivar
+126	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	30	Mostazal
+127	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	30	Malloa
+128	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	30	Machalí
+129	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	30	Las Cabras
+130	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	30	Graneros
+131	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	30	Doñihue
+132	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	30	Coltauco
+133	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	30	Coinco
+134	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	30	Codegua
+135	2025-12-22 14:58:11.33614-03	2025-12-22 14:58:11.33614-03	30	Rancagua
+136	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	31	San Rafael
+137	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	31	San Clemente
+138	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	31	Río Claro
+139	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	31	Pencahue
+140	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	31	Pelarco
+141	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	31	Maule
+142	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	31	Empedrado
+143	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	31	Curepto
+144	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	31	Constitución
+145	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	31	Talca
+146	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	32	Yerbas Buenas
+147	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	32	Villa Alegre
+148	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	32	San Javier
+149	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	32	Retiro
+150	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	32	Parral
+151	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	32	Longaví
+152	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	32	Colbún
+153	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	32	Linares
+154	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	33	Vichuquén
+155	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	33	Teno
+156	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	33	Sagrada Familia
+157	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	33	Romeral
+158	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	33	Rauco
+159	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	33	Molina
+160	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	33	Licantén
+161	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	33	Hualañé
+162	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	33	Curicó
+163	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	34	Pelluhue
+164	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	34	Chanco
+165	2025-12-22 15:01:55.406368-03	2025-12-22 15:01:55.406368-03	34	Cauquenes
+166	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	35	San Nicolás
+167	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	35	San Fabián
+168	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	35	Ñiquén
+169	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	35	Coihueco
+170	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	35	San Carlos
+171	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	36	Treguaco
+172	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	36	Ránquil
+173	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	36	Portezuelo
+174	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	36	Ninhue
+175	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	36	Coelemu
+176	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	36	Cobquecura
+177	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	36	Quirihue
+178	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	37	Yungay
+179	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	37	San Ignacio
+180	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	37	Quillón
+181	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	37	Pinto
+182	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	37	Pemuco
+183	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	37	El Carmen
+184	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	37	Chillán Viejo
+185	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	37	Bulnes
+186	2025-12-22 15:05:16.696971-03	2025-12-22 15:05:16.696971-03	37	Chillán
+187	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	38	Hualpén
+188	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	38	Tomé
+189	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	38	Talcahuano
+190	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	38	Santa Juana
+191	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	38	San Pedro de la Paz
+192	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	38	Penco
+193	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	38	Lota
+194	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	38	Hualqui
+195	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	38	Florida
+196	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	38	Chiguayante
+197	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	38	Coronel
+198	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	38	Concepción
+199	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	39	Alto Biobío
+200	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	39	Yumbel
+201	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	39	Tucapel
+202	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	39	Santa Bárbara
+203	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	39	San Rosendo
+204	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	39	Quilleco
+205	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	39	Quilaco
+206	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	39	Negrete
+207	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	39	Nacimiento
+208	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	39	Mulchén
+209	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	39	Laja
+210	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	39	Cabrero
+211	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	39	Antuco
+212	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	39	Los Ángeles
+213	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	40	Tirúa
+214	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	40	Los Álamos
+215	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	40	Curanilahue
+216	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	40	Contulmo
+217	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	40	Cañete
+218	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	40	Arauco
+219	2025-12-22 15:09:47.77136-03	2025-12-22 15:09:47.77136-03	40	Lebu
+220	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	41	Victoria
+221	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	41	Traiguén
+222	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	41	Renaico
+223	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	41	Purén
+224	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	41	Lumaco
+225	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	41	Los Sauces
+226	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	41	Lonquimay
+227	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	41	Ercilla
+228	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	41	Curacautín
+229	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	41	Collipulli
+230	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	41	Angol
+231	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Cholchol
+232	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Villarrica
+233	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Vilcún
+234	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Toltén
+235	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Teodoro Schmidt
+236	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Saavedra
+237	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Pucón
+238	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Pitrufquén
+239	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Perquenco
+240	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Padre Las Casas
+241	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Nueva Imperial
+242	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Melipeuco
+243	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Loncoche
+244	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Lautaro
+245	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Gorbea
+246	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Galvarino
+247	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Freire
+248	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Curarrehue
+249	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Cunco
+250	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Carahue
+251	2025-12-22 15:14:30.563704-03	2025-12-22 15:14:30.563704-03	42	Temuco
+252	2025-12-22 15:17:26.085529-03	2025-12-22 15:17:26.085529-03	43	Río Bueno
+253	2025-12-22 15:17:26.085529-03	2025-12-22 15:17:26.085529-03	43	Lago Ranco
+254	2025-12-22 15:17:26.085529-03	2025-12-22 15:17:26.085529-03	43	La Unión
+255	2025-12-22 15:17:26.085529-03	2025-12-22 15:17:26.085529-03	43	Futrono
+256	2025-12-22 15:17:26.085529-03	2025-12-22 15:17:26.085529-03	44	Panguipulli
+257	2025-12-22 15:17:26.085529-03	2025-12-22 15:17:26.085529-03	44	Paillaco
+258	2025-12-22 15:17:26.085529-03	2025-12-22 15:17:26.085529-03	44	Mariquina
+259	2025-12-22 15:17:26.085529-03	2025-12-22 15:17:26.085529-03	44	Máfil
+260	2025-12-22 15:17:26.085529-03	2025-12-22 15:17:26.085529-03	44	Los Lagos
+261	2025-12-22 15:17:26.085529-03	2025-12-22 15:17:26.085529-03	44	Lanco
+262	2025-12-22 15:17:26.085529-03	2025-12-22 15:17:26.085529-03	44	Corral
+263	2025-12-22 15:17:26.085529-03	2025-12-22 15:17:26.085529-03	44	Valdivia
+264	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	45	Palena
+265	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	45	Hualaihué
+266	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	45	Futaleufú
+267	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	45	Chaitén
+268	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	46	San Pablo
+269	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	46	San Juan de la Costa
+270	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	46	Río Negro
+271	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	46	Puyehue
+272	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	46	Purranque
+273	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	46	Puerto Octay
+274	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	46	Osorno
+275	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	47	Puerto Varas
+276	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	47	Maullín
+277	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	47	Llanquihue
+278	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	47	Los Muermos
+279	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	47	Frutillar
+280	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	47	Fresia
+281	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	47	Cochamó
+282	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	47	Calbuco
+283	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	47	Puerto Montt
+284	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	48	Quinchao
+285	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	48	Quemchi
+286	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	48	Quellón
+287	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	48	Queilén
+288	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	48	Puqueldón
+289	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	48	Dalcahue
+290	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	48	Curaco de Vélez
+291	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	48	Chonchi
+292	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	48	Ancud
+293	2025-12-22 15:20:42.913265-03	2025-12-22 15:20:42.913265-03	48	Castro
+294	2025-12-22 15:23:11.215034-03	2025-12-22 15:23:11.215034-03	49	Río Ibáñez
+295	2025-12-22 15:23:11.215034-03	2025-12-22 15:23:11.215034-03	49	Chile Chico
+296	2025-12-22 15:23:11.215034-03	2025-12-22 15:23:11.215034-03	50	Lago Verde
+297	2025-12-22 15:23:11.215034-03	2025-12-22 15:23:11.215034-03	50	Coyhaique
+298	2025-12-22 15:23:11.215034-03	2025-12-22 15:23:11.215034-03	51	Tortel
+299	2025-12-22 15:23:11.215034-03	2025-12-22 15:23:11.215034-03	51	O'Higgins
+300	2025-12-22 15:23:11.215034-03	2025-12-22 15:23:11.215034-03	51	Cochrane
+301	2025-12-22 15:23:11.215034-03	2025-12-22 15:23:11.215034-03	52	Guaitecas
+302	2025-12-22 15:23:11.215034-03	2025-12-22 15:23:11.215034-03	52	Cisnes
+303	2025-12-22 15:23:11.215034-03	2025-12-22 15:23:11.215034-03	52	Aysén
+304	2025-12-22 15:25:30.463104-03	2025-12-22 15:25:30.463104-03	53	Torres del Paine
+305	2025-12-22 15:25:30.463104-03	2025-12-22 15:25:30.463104-03	53	Natales
+306	2025-12-22 15:25:30.463104-03	2025-12-22 15:25:30.463104-03	54	Timaukel
+307	2025-12-22 15:25:30.463104-03	2025-12-22 15:25:30.463104-03	54	Primavera
+308	2025-12-22 15:25:30.463104-03	2025-12-22 15:25:30.463104-03	54	Porvenir
+309	2025-12-22 15:25:30.463104-03	2025-12-22 15:25:30.463104-03	55	San Gregorio
+310	2025-12-22 15:25:30.463104-03	2025-12-22 15:25:30.463104-03	55	Río Verde
+311	2025-12-22 15:25:30.463104-03	2025-12-22 15:25:30.463104-03	55	Laguna Blanca
+312	2025-12-22 15:25:30.463104-03	2025-12-22 15:25:30.463104-03	55	Punta Arenas
+313	2025-12-22 15:25:30.463104-03	2025-12-22 15:25:30.463104-03	56	Antártica
+314	2025-12-22 15:25:30.463104-03	2025-12-22 15:25:30.463104-03	56	Cabo de Hornos
+\.
+
+
+--
+-- TOC entry 3463 (class 0 OID 61510)
+-- Dependencies: 233
+-- Data for Name: contacts; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.contacts (id, created_at, updated_at, user_id, full_name) FROM stdin;
+1	2025-12-22 15:52:28.197603-03	2025-12-22 15:52:28.197603-03	2	Super Administrador
+\.
+
+
+--
+-- TOC entry 3455 (class 0 OID 61447)
+-- Dependencies: 225
+-- Data for Name: countries; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.countries (id, created_at, updated_at, name, code) FROM stdin;
+1	2025-12-22 12:21:42.324809-03	2025-12-22 12:21:42.324809-03	Chile	CL
+\.
+
+
+--
+-- TOC entry 3452 (class 0 OID 61422)
+-- Dependencies: 222
+-- Data for Name: permissions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.permissions (id, code, description, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3450 (class 0 OID 61407)
+-- Dependencies: 220
+-- Data for Name: profiles; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.profiles (id, created_at, updated_at, user_id, full_name, phone) FROM stdin;
+1	2025-12-22 10:25:50.029826-03	2025-12-22 10:25:50.029826-03	1	Administrador	12345678
+\.
+
+
+--
+-- TOC entry 3457 (class 0 OID 61458)
+-- Dependencies: 227
+-- Data for Name: regions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.regions (id, created_at, updated_at, country_id, name, code) FROM stdin;
+1	2025-12-22 12:25:11.53958-03	2025-12-22 12:25:11.53958-03	1	Arica y Parinacota	CL-AP
+2	2025-12-22 12:25:11.53958-03	2025-12-22 12:25:11.53958-03	1	Tarapacá	CL-TA
+3	2025-12-22 12:25:11.53958-03	2025-12-22 12:25:11.53958-03	1	Antofagasta	CL-AN
+4	2025-12-22 12:25:11.53958-03	2025-12-22 12:25:11.53958-03	1	Atacama	CL-AT
+5	2025-12-22 12:25:11.53958-03	2025-12-22 12:25:11.53958-03	1	Coquimbo	CL-CO
+6	2025-12-22 12:25:11.53958-03	2025-12-22 12:25:11.53958-03	1	Valparaíso	CL-VS
+7	2025-12-22 12:25:11.53958-03	2025-12-22 12:25:11.53958-03	1	Región Metropolitana de Santiago	CL-RM
+8	2025-12-22 12:25:11.53958-03	2025-12-22 12:25:11.53958-03	1	Libertador General Bernardo O'Higgins	CL-LI
+9	2025-12-22 12:25:11.53958-03	2025-12-22 12:25:11.53958-03	1	Maule	CL-ML
+10	2025-12-22 12:25:11.53958-03	2025-12-22 12:25:11.53958-03	1	Ñuble	CL-NB
+11	2025-12-22 12:25:11.53958-03	2025-12-22 12:25:11.53958-03	1	Biobío	CL-BI
+12	2025-12-22 12:25:11.53958-03	2025-12-22 12:25:11.53958-03	1	La Araucanía	CL-AR
+13	2025-12-22 12:25:11.53958-03	2025-12-22 12:25:11.53958-03	1	Los Ríos	CL-LR
+14	2025-12-22 12:25:11.53958-03	2025-12-22 12:25:11.53958-03	1	Los Lagos	CL-LL
+15	2025-12-22 12:25:11.53958-03	2025-12-22 12:25:11.53958-03	1	Aisén del General Carlos Ibañez del Campo	CL-AI
+16	2025-12-22 12:25:11.53958-03	2025-12-22 12:25:11.53958-03	1	Magallanes	CL-MA
+\.
+
+
+--
+-- TOC entry 3453 (class 0 OID 61431)
+-- Dependencies: 223
+-- Data for Name: role_permissions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.role_permissions (role_id, permission_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3447 (class 0 OID 61382)
+-- Dependencies: 217
+-- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.roles (id, name, description, created_at, updated_at, is_super_admin) FROM stdin;
+1	user	Rol base	\N	2025-12-22 15:43:19.74632-03	f
+3	admin	Administrador del sistema	2025-12-22 15:43:19.74632-03	2025-12-22 15:43:19.74632-03	f
+4	super_admin	Super administrador con acceso total	2025-12-22 15:43:19.74632-03	2025-12-22 15:43:19.74632-03	t
+\.
+
+
+--
+-- TOC entry 3465 (class 0 OID 61525)
+-- Dependencies: 235
+-- Data for Name: user_phones; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.user_phones (id, created_at, updated_at, user_id, label, number, is_main) FROM stdin;
+1	2025-12-22 15:52:28.199347-03	2025-12-22 15:52:28.199347-03	2	mobile	+56912345678	t
+\.
+
+
+--
+-- TOC entry 3448 (class 0 OID 61391)
+-- Dependencies: 218
+-- Data for Name: user_roles; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.user_roles (user_id, role_id) FROM stdin;
+1	1
+2	1
+2	3
+\.
+
+
+--
+-- TOC entry 3445 (class 0 OID 61370)
+-- Dependencies: 215
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.users (id, created_at, updated_at, email, username, password_hash, is_active, commune_id, address_id) FROM stdin;
+1	2025-12-22 10:25:50.028385-03	2025-12-22 10:25:50.028385-03	admin@handsoft.cl	admin	$2a$10$2F/E/g/WB.8A6nMaaoyhVu9asnSxLGK.m/kHK0nZQEb0bN8BF7Vd.	t	\N	\N
+2	2025-12-22 15:52:28.19562-03	2025-12-22 16:39:31.735049-03	superadmin@handsoft.cl	superadmin	$2a$10$carmT83yJWoT6.YJIip38ex3UfPod0dyrWqPqQIyGpxMkytz77ajW	t	\N	1
+\.
+
+
+--
+-- TOC entry 3484 (class 0 OID 0)
+-- Dependencies: 236
+-- Name: addresses_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.addresses_id_seq', 1, true);
+
+
+--
+-- TOC entry 3485 (class 0 OID 0)
+-- Dependencies: 228
+-- Name: cities_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.cities_id_seq', 56, true);
+
+
+--
+-- TOC entry 3486 (class 0 OID 0)
+-- Dependencies: 230
+-- Name: communes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.communes_id_seq', 314, true);
+
+
+--
+-- TOC entry 3487 (class 0 OID 0)
+-- Dependencies: 232
+-- Name: contacts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.contacts_id_seq', 1, true);
+
+
+--
+-- TOC entry 3488 (class 0 OID 0)
+-- Dependencies: 224
+-- Name: countries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.countries_id_seq', 1, true);
+
+
+--
+-- TOC entry 3489 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.permissions_id_seq', 1, false);
+
+
+--
+-- TOC entry 3490 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: profiles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.profiles_id_seq', 1, true);
+
+
+--
+-- TOC entry 3491 (class 0 OID 0)
+-- Dependencies: 226
+-- Name: regions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.regions_id_seq', 16, true);
+
+
+--
+-- TOC entry 3492 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.roles_id_seq', 4, true);
+
+
+--
+-- TOC entry 3493 (class 0 OID 0)
+-- Dependencies: 234
+-- Name: user_phones_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.user_phones_id_seq', 1, true);
+
+
+--
+-- TOC entry 3494 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 2, true);
+
+
+--
+-- TOC entry 3287 (class 2606 OID 61549)
+-- Name: addresses addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.addresses
+    ADD CONSTRAINT addresses_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3273 (class 2606 OID 61481)
+-- Name: cities cities_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.cities
+    ADD CONSTRAINT cities_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3277 (class 2606 OID 61496)
+-- Name: communes communes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.communes
+    ADD CONSTRAINT communes_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3281 (class 2606 OID 61517)
+-- Name: contacts contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.contacts
+    ADD CONSTRAINT contacts_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3264 (class 2606 OID 61454)
+-- Name: countries countries_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.countries
+    ADD CONSTRAINT countries_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3260 (class 2606 OID 61429)
+-- Name: permissions permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.permissions
+    ADD CONSTRAINT permissions_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3257 (class 2606 OID 61414)
+-- Name: profiles profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.profiles
+    ADD CONSTRAINT profiles_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3270 (class 2606 OID 61465)
+-- Name: regions regions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.regions
+    ADD CONSTRAINT regions_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3262 (class 2606 OID 61435)
+-- Name: role_permissions role_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.role_permissions
+    ADD CONSTRAINT role_permissions_pkey PRIMARY KEY (role_id, permission_id);
+
+
+--
+-- TOC entry 3251 (class 2606 OID 61389)
+-- Name: roles roles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.roles
+    ADD CONSTRAINT roles_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3285 (class 2606 OID 61533)
+-- Name: user_phones user_phones_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_phones
+    ADD CONSTRAINT user_phones_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3254 (class 2606 OID 61395)
+-- Name: user_roles user_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_roles
+    ADD CONSTRAINT user_roles_pkey PRIMARY KEY (user_id, role_id);
+
+
+--
+-- TOC entry 3248 (class 2606 OID 61378)
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3288 (class 1259 OID 61555)
+-- Name: idx_addresses_commune_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_addresses_commune_id ON public.addresses USING btree (commune_id);
+
+
+--
+-- TOC entry 3274 (class 1259 OID 61487)
+-- Name: idx_cities_region_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_cities_region_id ON public.cities USING btree (region_id);
+
+
+--
+-- TOC entry 3278 (class 1259 OID 61502)
+-- Name: idx_communes_city_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_communes_city_id ON public.communes USING btree (city_id);
+
+
+--
+-- TOC entry 3282 (class 1259 OID 61523)
+-- Name: idx_contacts_user_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX idx_contacts_user_id ON public.contacts USING btree (user_id);
+
+
+--
+-- TOC entry 3265 (class 1259 OID 61455)
+-- Name: idx_countries_code; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX idx_countries_code ON public.countries USING btree (code);
+
+
+--
+-- TOC entry 3266 (class 1259 OID 61456)
+-- Name: idx_countries_name; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX idx_countries_name ON public.countries USING btree (name);
+
+
+--
+-- TOC entry 3258 (class 1259 OID 61430)
+-- Name: idx_permissions_code; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX idx_permissions_code ON public.permissions USING btree (code);
+
+
+--
+-- TOC entry 3255 (class 1259 OID 61420)
+-- Name: idx_profiles_user_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX idx_profiles_user_id ON public.profiles USING btree (user_id);
+
+
+--
+-- TOC entry 3267 (class 1259 OID 61471)
+-- Name: idx_regions_code; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_regions_code ON public.regions USING btree (code);
+
+
+--
+-- TOC entry 3268 (class 1259 OID 61472)
+-- Name: idx_regions_country_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_regions_country_id ON public.regions USING btree (country_id);
+
+
+--
+-- TOC entry 3249 (class 1259 OID 61390)
+-- Name: idx_roles_name; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX idx_roles_name ON public.roles USING btree (name);
+
+
+--
+-- TOC entry 3283 (class 1259 OID 61539)
+-- Name: idx_user_phones_user_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_user_phones_user_id ON public.user_phones USING btree (user_id);
+
+
+--
+-- TOC entry 3245 (class 1259 OID 61380)
+-- Name: idx_users_email; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX idx_users_email ON public.users USING btree (email);
+
+
+--
+-- TOC entry 3246 (class 1259 OID 61379)
+-- Name: idx_users_username; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX idx_users_username ON public.users USING btree (username);
+
+
+--
+-- TOC entry 3275 (class 1259 OID 61562)
+-- Name: ux_cities_region_name; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX ux_cities_region_name ON public.cities USING btree (region_id, name);
+
+
+--
+-- TOC entry 3279 (class 1259 OID 61563)
+-- Name: ux_communes_city_name; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX ux_communes_city_name ON public.communes USING btree (city_id, name);
+
+
+--
+-- TOC entry 3271 (class 1259 OID 61561)
+-- Name: ux_regions_country_code; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX ux_regions_country_code ON public.regions USING btree (country_id, code);
+
+
+--
+-- TOC entry 3252 (class 1259 OID 61564)
+-- Name: ux_roles_name; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX ux_roles_name ON public.roles USING btree (name);
+
+
+--
+-- TOC entry 3301 (class 2606 OID 61550)
+-- Name: addresses fk_addresses_commune; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.addresses
+    ADD CONSTRAINT fk_addresses_commune FOREIGN KEY (commune_id) REFERENCES public.communes(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3289 (class 2606 OID 61556)
+-- Name: users fk_addresses_users; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT fk_addresses_users FOREIGN KEY (address_id) REFERENCES public.addresses(id);
+
+
+--
+-- TOC entry 3298 (class 2606 OID 61497)
+-- Name: communes fk_cities_communes; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.communes
+    ADD CONSTRAINT fk_cities_communes FOREIGN KEY (city_id) REFERENCES public.cities(id);
+
+
+--
+-- TOC entry 3290 (class 2606 OID 61503)
+-- Name: users fk_communes_users; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT fk_communes_users FOREIGN KEY (commune_id) REFERENCES public.communes(id);
+
+
+--
+-- TOC entry 3296 (class 2606 OID 61466)
+-- Name: regions fk_countries_regions; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.regions
+    ADD CONSTRAINT fk_countries_regions FOREIGN KEY (country_id) REFERENCES public.countries(id);
+
+
+--
+-- TOC entry 3297 (class 2606 OID 61482)
+-- Name: cities fk_regions_cities; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.cities
+    ADD CONSTRAINT fk_regions_cities FOREIGN KEY (region_id) REFERENCES public.regions(id);
+
+
+--
+-- TOC entry 3294 (class 2606 OID 61436)
+-- Name: role_permissions fk_role_permissions_permission; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.role_permissions
+    ADD CONSTRAINT fk_role_permissions_permission FOREIGN KEY (permission_id) REFERENCES public.permissions(id);
+
+
+--
+-- TOC entry 3295 (class 2606 OID 61441)
+-- Name: role_permissions fk_role_permissions_role; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.role_permissions
+    ADD CONSTRAINT fk_role_permissions_role FOREIGN KEY (role_id) REFERENCES public.roles(id);
+
+
+--
+-- TOC entry 3291 (class 2606 OID 61396)
+-- Name: user_roles fk_user_roles_role; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_roles
+    ADD CONSTRAINT fk_user_roles_role FOREIGN KEY (role_id) REFERENCES public.roles(id);
+
+
+--
+-- TOC entry 3292 (class 2606 OID 61401)
+-- Name: user_roles fk_user_roles_user; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_roles
+    ADD CONSTRAINT fk_user_roles_user FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- TOC entry 3299 (class 2606 OID 61518)
+-- Name: contacts fk_users_contacts; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.contacts
+    ADD CONSTRAINT fk_users_contacts FOREIGN KEY (user_id) REFERENCES public.users(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+--
+-- TOC entry 3300 (class 2606 OID 61534)
+-- Name: user_phones fk_users_phones; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_phones
+    ADD CONSTRAINT fk_users_phones FOREIGN KEY (user_id) REFERENCES public.users(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- TOC entry 3293 (class 2606 OID 61415)
+-- Name: profiles fk_users_profile; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.profiles
+    ADD CONSTRAINT fk_users_profile FOREIGN KEY (user_id) REFERENCES public.users(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+-- Completed on 2025-12-23 19:27:38
+
+--
+-- PostgreSQL database dump complete
+--
+
