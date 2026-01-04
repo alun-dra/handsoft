@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"handsoft/internal/db"
+	"handsoft/internal/http/middleware"
 	"handsoft/internal/http/routes"
 	"handsoft/internal/models"
 
@@ -14,7 +15,6 @@ import (
 )
 
 func main() {
-	// Carga variables desde .env (si existe)
 	if err := godotenv.Load(); err != nil {
 		log.Println("warning: no se encontró .env (se usarán variables del sistema)")
 	}
@@ -39,17 +39,14 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Migraciones (usa la lista centralizada en internal/models/migrate.go)
 	if err := gormDB.AutoMigrate(models.Models()...); err != nil {
 		log.Fatal(err)
 	}
 
-	// Seed base (lo haremos ahora/enseguida si quieres)
-	// if err := db.SeedBaseData(gormDB); err != nil {
-	// 	log.Fatal(err)
-	// }
-
 	r := gin.Default()
+
+	// ✅ CORS GLOBAL (antes de routes.Register)
+	r.Use(middleware.CORS())
 
 	routes.Register(r, routes.Deps{
 		DB:        gormDB,
