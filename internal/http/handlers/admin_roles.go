@@ -2,77 +2,135 @@ package handlers
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 
 	"handsoft/internal/models"
+	"handsoft/internal/http/routes"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
-type AdminHandler struct {
-	DB *gorm.DB
+type createRoleReq struct {
+	Name        string `json:"name" binding:"required"`
+	Description string `json:"description"`
+	IsSuperAdmin bool  `json:"is_super_admin"`
 }
 
-type UpdateUserRolesRequest struct {
-	Roles []string `json:"roles" binding:"required,min=1"`
-}
-
-// PUT /api/admin/users/:id/roles
-func (h *AdminHandler) UpdateUserRoles(c *gin.Context) {
-	var req UpdateUserRolesRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	// usuario objetivo
-	var user models.User
-	if err := h.DB.Preload("Roles").First(&user, c.Param("id")).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "usuario no encontrado"})
-		return
-	}
-
-	// normalizar + dedup
-	seen := map[string]bool{}
-	want := make([]string, 0, len(req.Roles))
-	for _, r := range req.Roles {
-		r = strings.TrimSpace(strings.ToLower(r))
-		if r == "" || seen[r] {
-			continue
+func ListRoles(deps routes.Deps) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var roles []models.Role
+		if err := deps.DB.Order("id asc").Find(&roles).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "db_error"})
+			return
 		}
-		seen[r] = true
-		want = append(want, r)
+		c.JSON(http.StatusOK, roles)
 	}
-	if len(want) == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "roles inválidos"})
-		return
-	}
+}
 
-	// cargar roles desde DB
-	var roles []models.Role
-	if err := h.DB.Where("name IN ?", want).Find(&roles).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "no se pudieron cargar roles"})
-		return
-	}
-	if len(roles) != len(want) {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "uno o más roles no existen"})
-		return
-	}
+func CreateRole(deps routes.Deps) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var req createRoleReq
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid_body"})
+			return
+		}
 
-	// Reemplazar roles
-	if err := h.DB.Model(&user).Association("Roles").Replace(roles); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "no se pudieron actualizar roles"})
-		return
-	}
+		req.Name = strings.TrimSpace(req.Name)
+		if req.Name == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "name_required"})
+			return
+		}
 
-	out := make([]string, 0, len(roles))
-	for _, r := range roles {
-		out = append(out, r.Name)
-	}
+		role := models.Role{
+			Name:         req.Name,
+			Description:  req.Description,
+			IsSuperAdmin: req.IsSuperAdmin,
+		}
 
-	c.JSON(http.StatusOK, gin.H{
-		"user_id": user.ID,
-		"roles":   out,
-	})
+		if err := deps.DB.Create(&role).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "cannot_create_role"})
+			return
+		}
+
+		c.JSON(http.StatusCreated, role)
+	}
+}
+
+type updateRoleReq struct {
+	Name         *string `json:"name"`
+	Description  *string `json:"description"`
+	IsSuperAdmin *bool   `json:"is_super_admin"`
+}
+
+func UpdateRole(deps routes.Deps) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid_id"})
+			return
+		}
+
+		var role models.Role
+		if err := deps.DB.First(&role, id).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "role_not_found"})
+			return
+		}
+
+		var req updateRoleReq
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid_body"})
+			return
+		}
+
+		if req.Name != nil {
+			name := strings.TrimSpace(*req.Name)
+			if name == "" {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "name_empty"})
+				return
+			}
+			role.Name = name
+		}
+		if req.Description != nil {
+			role.Description = *req.Description
+		}
+		if req.IsSuperAdmin != nil {
+			role.IsSuperAdmin = *req.IsSuperAdmin
+		}
+
+		if err := deps.DB.Save(&role).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "cannot_update_role"})
+			return
+		}
+
+		c.JSON(http.StatusOK, role)
+	}
+}
+
+func DeleteRole(deps routes.Deps) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid_id"})
+			return
+		}
+
+		// opcional: proteger super_admin para no borrarlo accidentalmente
+		var role models.Role
+		if err := deps.DB.First(&role, id).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "role_not_found"})
+			return
+		}
+		if role.IsSuperAdmin {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "cannot_delete_super_admin_role"})
+			return
+		}
+
+		if err := deps.DB.Delete(&models.Role{}, id).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "cannot_delete_role"})
+			return
+		}
+
+		c.Status(http.StatusNoContent)
+	}
 }

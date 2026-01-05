@@ -30,10 +30,6 @@ func (h *UserHandler) Me(c *gin.Context) {
 	var u models.User
 
 	// Cargamos relaciones relevantes
-	// - Contacts: datos personales
-	// - Phones: teléfonos
-	// - Roles: roles del usuario
-	// - Address -> Commune -> City -> Region -> Country: ubicación oficial
 	q := h.DB.
 		Preload("Contacts").
 		Preload("Phones").
@@ -51,8 +47,35 @@ func (h *UserHandler) Me(c *gin.Context) {
 
 	// Roles
 	roles := make([]string, 0, len(u.Roles))
+	isSuperAdmin := false
 	for _, r := range u.Roles {
 		roles = append(roles, r.Name)
+		if r.IsSuperAdmin {
+			isSuperAdmin = true
+		}
+	}
+
+	// Permissions (si es super_admin => "*", si no => permisos por roles)
+	permissions := make([]string, 0)
+	if isSuperAdmin {
+		permissions = []string{"*"}
+	} else {
+		// Query: permisos por roles del usuario
+		var perms []models.Permission
+		if err := h.DB.Model(&models.Permission{}).
+			Select("DISTINCT permissions.id, permissions.code").
+			Joins("JOIN role_permissions rp ON rp.permission_id = permissions.id").
+			Joins("JOIN roles r ON r.id = rp.role_id").
+			Where("r.name IN ?", roles).
+			Order("permissions.code asc").
+			Find(&perms).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "error obteniendo permisos"})
+			return
+		}
+
+		for _, p := range perms {
+			permissions = append(permissions, p.Code)
+		}
 	}
 
 	// Phones
@@ -65,7 +88,7 @@ func (h *UserHandler) Me(c *gin.Context) {
 		})
 	}
 
-	// Address + Location (desde Address)
+	// Address + Location
 	var address any = nil
 	location := gin.H{
 		"country": nil,
@@ -75,64 +98,51 @@ func (h *UserHandler) Me(c *gin.Context) {
 	}
 
 	if u.Address != nil {
-		// Address completo
 		address = gin.H{
-			"id":                      u.Address.ID,
-			"street":                  u.Address.Street,
-			"street_number":           u.Address.StreetNumber,
-			"is_condominium":          u.Address.IsCondominium,
+			"id":                       u.Address.ID,
+			"street":                   u.Address.Street,
+			"street_number":            u.Address.StreetNumber,
+			"is_condominium":           u.Address.IsCondominium,
 			"condominium_house_number": u.Address.CondominiumHouseNumber,
-			"building_number":         u.Address.BuildingNumber,
-			"apartment_number":        u.Address.ApartmentNumber,
-			"extra":                   u.Address.Extra,
-			"commune_id":              u.Address.CommuneID,
+			"building_number":          u.Address.BuildingNumber,
+			"apartment_number":         u.Address.ApartmentNumber,
+			"extra":                    u.Address.Extra,
+			"commune_id":               u.Address.CommuneID,
 		}
 
-		// Location inferida desde la comuna de Address
 		co := u.Address.Commune
-		location["commune"] = gin.H{
-			"id":   co.ID,
-			"name": co.Name,
-		}
+		location["commune"] = gin.H{"id": co.ID, "name": co.Name}
 
 		ct := co.City
 		if ct.ID != 0 {
-			location["city"] = gin.H{
-				"id":   ct.ID,
-				"name": ct.Name,
-			}
+			location["city"] = gin.H{"id": ct.ID, "name": ct.Name}
 		}
 
 		rg := ct.Region
 		if rg.ID != 0 {
-			location["region"] = gin.H{
-				"id":   rg.ID,
-				"name": rg.Name,
-				"code": rg.Code,
-			}
+			location["region"] = gin.H{"id": rg.ID, "name": rg.Name, "code": rg.Code}
 		}
 
 		cn := rg.Country
 		if cn.ID != 0 {
-			location["country"] = gin.H{
-				"id":   cn.ID,
-				"name": cn.Name,
-				"code": cn.Code,
-			}
+			location["country"] = gin.H{"id": cn.ID, "name": cn.Name, "code": cn.Code}
 		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"id":       u.ID,
-		"email":    u.Email,
-		"username": u.Username,
-		"isActive": u.IsActive,
+		"id":             u.ID,
+		"email":          u.Email,
+		"username":       u.Username,
+		"isActive":       u.IsActive,
+		"is_super_admin": isSuperAdmin,
+		"roles":          roles,
+		"permissions":    permissions,
+
 		"contact": gin.H{
 			"full_name": u.Contacts.FullName,
 		},
 		"phones":   phones,
 		"address":  address,
 		"location": location,
-		"roles":    roles,
 	})
 }
