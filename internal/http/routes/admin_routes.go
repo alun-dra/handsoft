@@ -15,6 +15,8 @@ func RegisterAdminRoutes(api *gin.RouterGroup, deps Deps) {
 		AccessTTL: deps.AccessTTL,
 	}
 
+	adminH := &handlers.AdminHandler{DB: deps.DB}
+
 	admin := api.Group("/admin")
 	admin.Use(
 		middleware.AuthJWT(jwtCfg),
@@ -22,15 +24,15 @@ func RegisterAdminRoutes(api *gin.RouterGroup, deps Deps) {
 	)
 
 	// Roles CRUD
-	admin.GET("/roles", handlers.ListRoles(deps))
-	admin.POST("/roles", handlers.CreateRole(deps))
-	admin.PUT("/roles/:id", handlers.UpdateRole(deps))
-	admin.DELETE("/roles/:id", handlers.DeleteRole(deps))
+	admin.GET("/roles", adminH.ListRoles)
+	admin.POST("/roles", adminH.CreateRole)
+	admin.PUT("/roles/:id", adminH.UpdateRole)
+	admin.DELETE("/roles/:id", adminH.DeleteRole)
 
 	// Permissions
-	admin.GET("/permissions", handlers.ListPermissions(deps))
+	admin.GET("/permissions", adminH.ListPermissions)
 
 	// Asignar permisos a un rol (replace)
-	admin.PUT("/roles/:id/permissions", handlers.SetRolePermissions(deps))
-	admin.GET("/roles/:id/permissions", handlers.GetRolePermissions(deps))
+	admin.PUT("/roles/:id/permissions", adminH.SetRolePermissions)
+	admin.GET("/roles/:id/permissions", adminH.GetRolePermissions)
 }
